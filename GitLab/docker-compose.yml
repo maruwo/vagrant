@@ -1,15 +1,20 @@
-web:
-  image: 'gitlab/gitlab-ce:latest'
+gitlab:
+  build: .
   restart: always
   hostname: 'gitlab.example.com'
   environment:
     GITLAB_OMNIBUS_CONFIG: |
-      external_url 'http://192.168.0.100'
-      gitlab_rails['gitlab_shell_ssh_port'] = 2222
+      external_url 'http://192.168.0.198'
+      unicorn['worker_processes'] = 3
+      postgresql['shared_buffers'] = "1024MB"
+      gitlab_rails['time_zone'] = 'Asia/Tokyo'
+      gitlab_rails['gitlab_shell_ssh_port'] = 22222
+      gitlab_rails['db_prepared_statements'] = false
+      gitlab_rails['gravatar_enabled'] = false
   ports:
     - '80:80'
     - '443:443'
-    - '2222:22'
+    - '22222:22'
   volumes:
     - '/srv/gitlab/config:/etc/gitlab'
     - '/srv/gitlab/logs:/var/log/gitlab'
